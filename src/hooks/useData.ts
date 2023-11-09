@@ -1,8 +1,5 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-/* eslint-disable react-hooks/exhaustive-deps */
-
-import { useEffect, useState } from "react";
 import { AxiosRequestConfig, CanceledError } from "axios";
+import { useEffect, useState } from "react";
 import apiClient from "../services/api-client";
 
 interface FetchResponse<T> {
@@ -10,38 +7,29 @@ interface FetchResponse<T> {
   results: T[];
 }
 
-const useData = <T>(
-  endpoint: string,
-  requestConfig?: AxiosRequestConfig,
-  deps?: any[]
-) => {
+const useData = <T>(endpoint: string, requestConfig?: AxiosRequestConfig, deps?: any[]) => {
   const [data, setData] = useState<T[]>([]);
   const [error, setError] = useState("");
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setLoading] = useState(false);
 
-  useEffect(
-    () => {
-      const controller = new AbortController();
-      setIsLoading(true);
-      apiClient
-        .get<FetchResponse<T>>(endpoint, {
-          signal: controller.signal,
-          ...requestConfig,
-        })
-        .then((res) => {
-          setData(res.data.results);
-          setIsLoading(false);
-        })
-        .catch((err) => {
-          if (err instanceof CanceledError) return;
-          setError(err.message);
-          setIsLoading(false);
-        });
+  useEffect(() => {
+    const controller = new AbortController();
 
-      return () => controller.abort();
-    },
-    deps ? [...deps] : []
-  );
+    setLoading(true);
+    apiClient
+      .get<FetchResponse<T>>(endpoint, { signal: controller.signal, ...requestConfig })
+      .then((res) => {
+        setData(res.data.results);
+        setLoading(false);
+      })
+      .catch((err) => {
+        if (err instanceof CanceledError) return;
+        setError(err.message)
+        setLoading(false);
+      });
+
+    return () => controller.abort();
+  }, deps ? [...deps] : []);
 
   return { data, error, isLoading };
 };

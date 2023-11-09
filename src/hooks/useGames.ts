@@ -1,13 +1,20 @@
-import { GameQuery } from "./../App";
+import { GameQuery } from "../App";
 import useData from "./useData";
-import { Platfrom } from "./usePlatforms";
+import { Genre } from "./useGenres";
+
+export interface Platform {
+  id: number;
+  name: string;
+  slug: string;
+}
 
 export interface Game {
   id: number;
   name: string;
   background_image: string;
-  parent_platforms: { platform: Platfrom }[];
+  parent_platforms: { platform: Platform }[];
   metacritic: number;
+  rating_top: number;
 }
 
 const useGames = (gameQuery: GameQuery) =>
@@ -16,9 +23,9 @@ const useGames = (gameQuery: GameQuery) =>
     {
       params: {
         genres: gameQuery.genre?.id,
-        platfroms: gameQuery.platform?.id,
+        platforms: gameQuery.platform?.id,
         ordering: gameQuery.sortOrder,
-        search: gameQuery.searchText,
+        search: gameQuery.searchText
       },
     },
     [gameQuery]
