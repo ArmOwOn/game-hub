@@ -1,4 +1,4 @@
-# Modern UI/UX website using ReactTS & ChakraUI
+# Game-Store website using ReactTS & ChakraUI
 
 [Live Site](https://game-hub-nu-lake.vercel.app)
 
